@@ -38,8 +38,10 @@ function log10( val ){
 
 		Classes : {
 
-			create: function( params ){
-
+			create: function( params ){		
+				 
+				
+				 
 				var classes = [];
 				var constants = {
 					sumOfFreq : 0 ,
@@ -54,7 +56,9 @@ function log10( val ){
 				for(var i = 0 ; i< params.classDoc.length; i++){
 
 					var clas = {};
-                    classes[i] = clas ;
+					clas.Basic = (function(){
+						param = params.classDoc[i];
+					})();
 					clas.lowerLimit = params.classDoc[i].lowerLimit;
 					clas.upperLimit = params.classDoc[i].upperLimit;
 					clas.lowerBoundary=clas.lowerLimit-0.5;
@@ -118,28 +122,6 @@ function log10( val ){
 				});
 			}
 		},
-		Mean:{
-			Aritmetic:{
-				create:function( params ){},
-			},
-			Geometric:{
-				create:function( params ){},
-			},
-			Harmonic:{
-				create:function( params ){},
-			},
-			create:function( params ){
-				var Obj = {};
-				if( "Arithmetic" in params )
-					this.Arithmetic.create( params.Arithmetic );
-				if(  )
-				return this.extend({
-					Arithmetic:this.Arithmetic.create( params.Arithmetic ),
-					Geometric:this.Geometric.create( params.Geometric ),
-					Harmonic:this.Harmonic.create( params.Harmonic ),
-				});
-			}
-		}
 
 		paramsHandler:function( params , type){
 			if( type === "Classes" ){
