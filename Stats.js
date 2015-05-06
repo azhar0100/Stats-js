@@ -38,82 +38,27 @@ function log10( val ){
 
 		Classes : {
 
-			create: function( params ){		
-				 
-				
-				 
-				var classes = [];
-				var constants = {
-					sumOfFreq : 0 ,
-					productOfFreq : 0,
-					sumOfFx:0,
-					sumOfFd:0,
-					sumOfFu:0,
-					sumOfFlogX:0,
-					sumOfFReciX:0,	
-				};
-
-				for(var i = 0 ; i< params.classDoc.length; i++){
-
-					var clas = {};
-					clas.Basic = (function(){
-						param = params.classDoc[i];
-					})();
-					clas.lowerLimit = params.classDoc[i].lowerLimit;
-					clas.upperLimit = params.classDoc[i].upperLimit;
-					clas.lowerBoundary=clas.lowerLimit-0.5;
-					clas.upperBoundary=clas.upperLimit+0.5;
-					clas.midPoint=(clas.lowerLimit+clas.upperLimit)/2;
-					clas.classSize=clas.upperBoundary-clas.lowerBoundary;
-					clas.classElements = [];
-
-
-					for( var j = 0 ; j < params.dataArray.length ; j++ )
-						if( params.dataArray[j] >= params.classDoc[i].lowerLimit  &&
-						  params.dataArray[j] <= params.classDoc[i].upperLimit )
-							clas.classElements.push( params.dataArray[j] );
-
-					clas.freq = clas.classElements.length;
-					clas.fx = clas.freq * clas.midPoint ;
-
-					if( "assumedMean" in params  ){
-
-						clas.devi = clas.midPoint - params.assumedMean;
-						clas.fD = clas.devi * clas.frequency ;
-
-						if( "commonFactor" in params ){
-							clas.u = clas.midPoint / params.commonFactor ;
-							clas.fu = clas.u * clas.frequency ;
-						}
-
-					}
-
-
-					clas.logX = window.log10( clas.midPoint );
-					clas.fLogX = clas.freq * clas.logX;
-
-					clas.reciX = 1 / clas.midPoint ;
-					clas.fReciX = clas.reciX * clas.freq;
-
-
-					constants.sumOfFreq += clas.freq;
-					clas.cumulativFreq = constants.sumOfFreq;
-
-					constants.sumOfFx += clas.fx;
-
-					constants.productOfFreq  *= clas.freq;
-
-					constants.sumOfFx += clas.fx;
-
-					constants.sumOfFd += clas.fD;
-
-					constants.sumOfFu += clas.fu;
-
-					constants.sumOfFlogX += clas.fu;
-
-					constants.sumOfFReciX += clas.fReciX;	
-
+			Iterator = function Iterator( ClassObjects, bufferOperations ){
+				for(var i = 0 ; i< ClassObjects.length; i++){
+					var collectiveSpace = {},
+					var bufer = ClassObjects[i],
+					for(var j = 0 ; j<bufferOperations ; j++ )
+						bufferOperations[i].func( bufer,collectiveSpace );
 				}
+				if( arguments.length > 2 )
+					this.Iterator.call( this, ClassObjects , arguments[3] );
+			};
+
+			create: function( params ){		
+				  
+				var classes = Object.create(params.classDoc);
+
+				var lowerBoundary = function( bufer ){
+					bufer.lowerBoundary = bufer.lowerLimit - 0.5;
+				}
+
+				this.Iterator( classes, [lowerBoundary] )
+
 				return this.extend({	
 					classes :  classes,
 
