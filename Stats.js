@@ -38,24 +38,32 @@ function log10( val ){
 
 		Classes : {
 
-			Iterator = function Iterator( ClassObjects, bufferOperations ){
-				for(var i = 0 ; i< ClassObjects.length; i++){
-					var collectiveSpace = {},
-					var bufer = ClassObjects[i],
-					for(var j = 0 ; j<bufferOperations ; j++ )
-						bufferOperations[i].func( bufer,collectiveSpace );
+			Iterator : function Iterator( ClassObjects, bufferOperations ){
+				for(var i = 0 ; i < ClassObjects.length; i++){
+					var collectiveSpace = {};
+					var bufer = ClassObjects[i];
+					for(var j = 0 ; j<bufferOperations.length ; j++ )
+						bufferOperations[j]( bufer,collectiveSpace );
 				}
-				if( arguments.length > 2 )
-					this.Iterator.call( this, ClassObjects , arguments[3] );
-			};
+				return [ClassObjects , collectiveSpace];
+			},
 
 			create: function( params ){		
 				  
 				var classes = Object.create(params.classDoc);
 
-				var lowerBoundary = function( bufer ){
-					bufer.lowerBoundary = bufer.lowerLimit - 0.5;
-				}
+				var coreOps = [
+					function lowerBoundary( clas ){
+						clas.lowerboundary = clas.lowerLimit - 1 ;
+					},
+					function upperBoundary( clas ){
+						clas.upperBoundary = clas.lowerLimit + 1 ;
+					},
+					function midPoint( clas ){
+						clas.midPoint = (clas.lowerboundary + clas.upperBoundary)/2 ;
+					},
+
+				];
 
 				this.Iterator( classes, [lowerBoundary] )
 
