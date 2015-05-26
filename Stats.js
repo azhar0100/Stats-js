@@ -38,33 +38,39 @@ function log10( val ){
 
 		Classes : {
 
-			Iterator = function Iterator( ClassObjects, bufferOperations ){
-				for(var i = 0 ; i< ClassObjects.length; i++){
-					var collectiveSpace = {},
-					var bufer = ClassObjects[i],
-					for(var j = 0 ; j<bufferOperations ; j++ )
-						bufferOperations[i].func( bufer,collectiveSpace );
+			PkgManager : {
+				packages:[],
+				/*
+				#EXPERIMENTAL#
+				Package manager is a way to make the classes construct extensible.
+				This way the Classes module could be spread over several files or areas.
+				The Packages object will be containing some expected constructs.
+				It will have a 'level parameter' that can be used to optimize performance.
+				Some packages will have to access the classes objects as a whole while some
+				of them will not do more than do a one time property manipulation.
+				Care must be taken to not introduce modules which are very small(that will cause maintnance to be hard) 
+				or modules which are very large(beats the purpose of this PackageManager).
+				*/
+
+				add : function add( pkg ){
+					/*+++Error Handling code to be added here in the future+++*/
+					this.packages.push( pkg );
+				},
+			},
+
+			Iterator : function Iterator( ClassObjects, bufferOperations ){
+				for(var i = 0 ; i < ClassObjects.length; i++){
+					var collectiveSpace = {};
+					var bufer = ClassObjects[i];
+					for(var j = 0 ; j<bufferOperations.length ; j++ )
+						bufferOperations[j]( bufer,collectiveSpace );
 				}
-				if( arguments.length > 2 )
-					this.Iterator.call( this, ClassObjects , arguments[3] );
-			};
+				return collectiveSpace;
+			},
 
-			create: function( params ){		
-				  
-				var classes = Object.create(params.classDoc);
+			create: function( params ){
 
-				var lowerBoundary = function( bufer ){
-					bufer.lowerBoundary = bufer.lowerLimit - 0.5;
-				}
-
-				this.Iterator( classes, [lowerBoundary] )
-
-				return this.extend({	
-					classes :  classes,
-
-					Constants: constants,
-
-				});
+				var core			
 			}
 		},
 
