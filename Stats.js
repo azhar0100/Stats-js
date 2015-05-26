@@ -64,7 +64,9 @@ function log10( val ){
 						Bootstrap type packages have the ability to start when the
 						create method is called so it is a very optimizing type of package.
 						Many light-medium weight packages can be defined as Bootstrap
-						packages.They do not have to be coupled with the iterator and run after the iterator.
+						packages.They do not have to be coupled with the iterator and
+						run after the iterator.Their are some kinds of bootstrap packages like:-
+						####
 				*/
 
 				add : function add( pkg ){
