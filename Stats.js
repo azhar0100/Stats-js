@@ -34,7 +34,7 @@ function log10( val ){
 
 (function( window ){
 
-	var Stats = {
+	var Stats = {};
 
 		Classes : {
 
@@ -73,34 +73,7 @@ function log10( val ){
 				var core			
 			}
 		},
-
-		paramsHandler:function( params , type){
-			if( type === "Classes" ){
-				var output = params.Classes;
-
-				output.dataArray = params.dataArray;
-
-				if( "Mean" in params )
-					if( "Arithmetic" in params.Mean )
-						if( "assumedMean" in params.Mean.Arithmetic ){
-							output.assumedMean = params.Mean.Arithmetic.assumedMean;
-							if( "commonFactor" in params.Mean.Arithmetic )
-								output.commonFactor = params.Mean.Arithmetic.commonFactor;
-						}
-
-				return output;
-			}
-		},
-
-		create:function( params ){
-
-			var Obj = {};
-			Obj = this.extend({
-				Classes : this.Classes.create.call( this.Classes, this.paramsHandler( params , "Classes") )
-			});
-			return Obj;
-		}
-	};
+	;
 
 	Stats.create = Stats.create.bind(Stats);
 
