@@ -75,7 +75,7 @@ function log10( val ){
 				},
 			},
 
-			Iterator : function Iterator( ClassObjects, bufferOperations ){
+			Iterate : function Iterate( ClassObjects, bufferOperations ){
 				for(var i = 0 ; i < ClassObjects.length; i++){
 					var collectiveSpace = {};
 					var bufer = ClassObjects[i];
@@ -87,7 +87,12 @@ function log10( val ){
 
 			create: function( params ){
 
-				var core			
+				var core = {
+					name     :  'core',
+					Manifest :  {
+						type :  'Bootstrap',
+					}
+				}
 			}
 		},
 	;
