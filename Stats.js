@@ -41,12 +41,14 @@ function log10( val ){
 			PkgManager : {
 
 				packages:[],
+				classified : [],
 
 				BootController: {} ;
 
 				add : function add( pkg ){
 					/*+++Error Handling code to be added here in the future+++*/
 					this.packages.push( pkg );
+					if(this.classified[pkg.type] ===  )  
 				},
 				query : function query(pkgName){
 					/*
@@ -67,26 +69,28 @@ function log10( val ){
 							return false;
 						}else{
 							var str = pkgName.split('.',1);
-							return query( str[1] , str[0] );
+							return query( str[1] , str[0].packages );
 						}			
 					}
 				}
 			},
 
 			Iterate : function Iterate( Classes, functions , params){
-
+				var space = {};
 				for(var i = 0 ; i < Classes.length; i++){
-					var space = {};
 					var classes = Classes[i];
 					for(var j = 0 ; j<functions.length ; j++ )
 						functions[j]( Classes , space , params );
 				}
-
 			},
 
 			create: function( params ){
 
 				var classes = [];
+				for (var i = 0; i < params.classDoc.length; i++) {
+					classes[i].add(params.classDoc[i]);
+				}
+
 				var PkgManager = this.PkgManager;
 
 				var core = {
@@ -97,10 +101,7 @@ function log10( val ){
 							name : 'core.main'
 							type : 'BootControl'
 							run : function( params ){
-								var classes = [];
-								for (var i = 0; i < PkgManager.PreBootPackages.length; i++) {
-									this.PkgManager.PreBootPackages[i].run( params );
-								}
+								this.iterate( classes, [PkgManager.query('core.iterate')] , params );
 							}
 						},
 						{
