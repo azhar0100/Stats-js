@@ -39,59 +39,85 @@ function log10( val ){
 		Classes : {
 
 			PkgManager : {
+
 				packages:[],
-				/*
-				#EXPERIMENTAL#
-				Package manager is a way to make the classes construct extensible.
-				This way the Classes module could be spread over several files or areas.
-				The Packages object will be containing some expected constructs.
-				It will have a 'type' system to optimize performance and introduce 
-				simplicity.Some packages will have to access the classes objects as a
-				whole while some
-				of them will not do more than do a one time property manipulation.
-				Care must be taken to not introduce modules which are very small(that will cause maintnance to be hard) 
-				or modules which are very large(beats the purpose of this PackageManager).
-				
-				General Configuration of package
-				===============================
 
-					{
-						type:'One of many'
-						//The rest of the package is determined by the type of permission
-					}
-
-					###Bootstrap
-						Bootstrap type packages have the ability to start when the
-						create method is called so it is a very optimizing type of package.
-						Many light-medium weight packages can be defined as Bootstrap
-						packages.They do not have to be coupled with the iterator and
-						run after the iterator.Their are some kinds of bootstrap packages like:-
-						####
-				*/
+				BootController: {} ;
 
 				add : function add( pkg ){
 					/*+++Error Handling code to be added here in the future+++*/
 					this.packages.push( pkg );
 				},
+				query : function query(pkgName){
+					/*
+					This is a function that will be used by packages to refer to other packages.
+					Packages using heirarichal structure will use the '.' as seperator'
+					 */
+					
+					function query(pkgName,packages){
+
+						if(typeof packages === 'undefined' )
+							packages = this.packages;
+
+						if( pkgName.indexOf('.') === -1 ){
+							for (var i = 0; i < packages.length; i++) {
+								if(packages[i].name === pkgName)
+									return packages[i];
+							}
+							return false;
+						}else{
+							var str = pkgName.split('.',1);
+							return query( str[1] , str[0] );
+						}			
+					}
+				}
 			},
 
-			Iterate : function Iterate( ClassObjects, bufferOperations ){
-				for(var i = 0 ; i < ClassObjects.length; i++){
-					var collectiveSpace = {};
-					var bufer = ClassObjects[i];
-					for(var j = 0 ; j<bufferOperations.length ; j++ )
-						bufferOperations[j]( bufer,collectiveSpace );
+			Iterate : function Iterate( Classes, functions , params){
+
+				for(var i = 0 ; i < Classes.length; i++){
+					var space = {};
+					var classes = Classes[i];
+					for(var j = 0 ; j<functions.length ; j++ )
+						functions[j]( Classes , space , params );
 				}
-				return collectiveSpace;
+
 			},
 
 			create: function( params ){
 
+				var classes = [];
+				var PkgManager = this.PkgManager;
+
 				var core = {
-					name     :  'core',
-					Manifest :  {
-						type :  'Bootstrap',
-					}
+					name     :  'core',	
+					type :  'Group',
+					packages : [
+						{
+							name : 'core.main'
+							type : 'BootControl'
+							run : function( params ){
+								var classes = [];
+								for (var i = 0; i < PkgManager.PreBootPackages.length; i++) {
+									this.PkgManager.PreBootPackages[i].run( params );
+								}
+							}
+						},
+						{
+							name : 'core.iterate'
+							type : 'Bootstrap'
+							run  : function( clas, space, params ){
+								clas.lowerBoundary = clas.lowerLimit - 0.5;
+								clas.upperBoudary  = clas.upperLimit + 0.5;
+								clas.midPoint = clas.lowerBoundary + clas.upperLimit;
+								clas.elements = [];
+								for (var i = 0; i < params.dataArray.length; i++) {
+									if( clas.lowerLimit <= params.dataArray[i] >= clas.upperLimit )
+										clas.elements.push(params.dataArray[i]);
+								}
+							}
+						}
+					]
 				}
 			}
 		},
