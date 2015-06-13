@@ -2,33 +2,11 @@ Classes  @experimental
 ======================
 
 
-
 Params
 ------
 
 The Params function contain the params that the classes create function will accept.If it cant find *enough* params, then it will return a new classes object.
-The params object can be defined as :-
-
-    params={
-      dataArray: [ ... ],
-      classDoc : [
-        { lowerLimit:someNum , upperLimit:someNum },
-        { lowerLimit:someNum , upperLimit:someNum },
-        { lowerLimit:someNum , upperLimit:someNum },
-        { lowerLimit:someNum , upperLimit:someNum },
-        { lowerLimit:someNum , upperLimit:someNum },
-        { lowerLimit:someNum , upperLimit:someNum },
-        { lowerLimit:someNum , upperLimit:someNum },
-        ....
-      ],
-      settings:{
-        clean : true,
-        explicit : [ somePkg , somePkg , somePkg ],
-      }
-    }
-
-  -The `clean` option runs it with `core` methods that only return a basic classes object.
-  -The `explicit` option run it with only the packages selected.The dependencies must be respected.
+The params object can be de
 
 
 Iterate
@@ -37,9 +15,9 @@ Iterate
 The iterate is a function that iterates over class lists(the classes array).
 It is the probably the main portion of the classes portion of the Stats library.
 The iterate function recieves an array of functions which it executes over the classes array sequentially.The functions are given 3 arguments on execution:-
-  - The current class object.
-  - A collective space.
-  - The params given to the create function.
+  -The current class object.
+  -A collective space.
+  -The params given to the create function.
 
 The iterator runs in the following cases by default:-
   -When the `create` method is called.It is called with the core methods.
@@ -56,10 +34,10 @@ All package objects contain a manifest object which describes the type of packag
 
 ###Types
 There are many types of packages.
-  - Bootstrap
-  - PreBoots
-  - BootControl
-  - PostBoot
+  -Bootstrap
+  -PreBoots
+  -BootControl
+  -PostBoot
 
 One of these is set as the `type` property of `Package` object.
 
@@ -100,7 +78,7 @@ Currently I have no idea what these could be used for.Anyway i will add the basi
     }
 
 #### BootControl
-These packages can control the whole boot process.Core is a bootControl package.I dont think you will ever need it but just in case.When the `create` method is called then this is used.PostBoot packages are not under its control.
+These packages can control the whole boot process.You can actually access core from here.It is normally recommended to avoid using this type of package so that the program may stay stable.It requires you to manually run the boot process.
 
     Package:{
         name : 'some unique name',
@@ -122,31 +100,5 @@ These run a function after the iterate function runs.They are the most powerful 
 	}
 
 
-###Groups
-Packages can be in groups.A group package can be used to ease the dependancy issues.These packages have the `type` set to `group`.They contain an array with named `packages` that contain package objects. These can be used to structure the packages.
-
-### How to use
-Packages should be used as follows.
-
-    var sum = {
-      name : sumOfF,
-      type : 'Bootstrap',
-      run  : [ function(clas,space){
-        if( space.sumOfF ){
-          space.sumOfF = 0;
-        }
-        space.sumOfF += clas.freq;        
-      } ]
-    }
-    Stats.PkgManager.Classes.add( sum );
-    //Now the package is added and it can be used in the code
-    var classes = Classes.create();
-    (Classes.create().PkgManager.add( Stats.PkgManager.Classes.sum )).create(params)
-
-
-
-
-
-
-
-
+###Dependencies
+Dependencies is an array which contains the names of the packages on which the package depends.These help in error handling.
